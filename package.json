@@ -1,0 +1,24 @@
+{
+  "name": "mini-insta",
+  "version": "1.0.0",
+  "description": "Mini Insta é um projeto de estudo que simula uma versão simplificada do Instagram, com login, perfil, postagens, curtidas e comentários.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eldergsilva/mini-insta.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/eldergsilva/mini-insta/issues"
+  },
+  "homepage": "https://github.com/eldergsilva/mini-insta#readme",
+  "dependencies": {
+    "knex": "^3.3.0"
+  }
+}
