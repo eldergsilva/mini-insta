@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/eldergsilva/mini-insta#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "knex": "^3.3.0"
   }
 }
