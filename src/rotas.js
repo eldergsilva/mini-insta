@@ -1,15 +1,14 @@
 const express = require("express");
-const {cadastrarUsuario, obterPerfil} = require('./controladores/usuarios');
-
+const { cadastrarUsuario, obterPerfil, atualizarPerfil } = require('./controladores/usuarios');
+ 
 
 const rotas = express();
 
-rotas.post('/cadastro',usuarios.cadastrarUsuario);
-rotas.post('/login',login.login);
+rotas.post('/cadastro', cadastrarUsuario);
+ 
+ 
 
-rotas.use(verifcaLogin);
+rotas.get('/perfil', obterPerfil);
+rotas.put('/perfil', atualizarPerfil);
 
-rotas.get('perfil',usuarios.obterPerfil);
-rotas.put('perfil',usuarios.atualizarUsuario);
 module.exports = rotas;
-

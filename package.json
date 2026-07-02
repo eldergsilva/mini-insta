@@ -4,7 +4,8 @@
   "description": "Mini Insta é um projeto de estudo que simula uma versão simplificada do Instagram, com login, perfil, postagens, curtidas e comentários.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon ./src/index.js",
+    "start": "node .src/index.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
   "homepage": "https://github.com/eldergsilva/mini-insta#readme",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
     "knex": "^3.3.0"
   }
 }
