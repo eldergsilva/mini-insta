@@ -33,6 +33,12 @@ const cadastrarUsuario = async (req,res)  => {
         return res.status(400).json(error.message);
      }
 }
+
+const obterPerfil = async (req,res) => {
+    return res.status(200).json(req.usuario);
+}
+
 module.exports = {
-    cadastrarUsuario
+    cadastrarUsuario,
+    obterPerfil
 }
