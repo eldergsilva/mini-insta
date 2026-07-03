@@ -1,4 +1,4 @@
-create database mini_insta;
+
 create database mini_insta;
 
 create table usuarios (
@@ -48,3 +48,5 @@ create table postagem_curtidas (
   foreign key (usuario_id) references usuarios(id),
   foreign key (postagem_id) references postagem(id)
 );
+
+select * from postagem where usuario_id = 1;
