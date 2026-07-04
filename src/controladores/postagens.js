@@ -17,9 +17,26 @@ const obterPostagens = async (req, res) => {
 
         if (postagens.length === 0) {
             return res.status(404).json({ mensagem: 'Não há postagens' });
+       
         }
+        const postagensFormatadas = postagens.map((postagem) => {
+        return {
+        id: postagem.id,
+        texto: postagem.texto,
+        data: postagem.data,
+        usuario: {
+            username: postagem.username,
+            imagem: postagem.usuario_imagem,
+            e_perfil_oficial: postagem.e_perfil_oficial
+                }
+            };
+        });
 
-        return res.status(200).json(postagens);
+        
+        return res.status(200).json(postagensFormatadas);
+
+
+         
     } catch (error) {
         return res.status(500).json({ mensagem: error.message });
     }
