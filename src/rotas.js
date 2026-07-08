@@ -1,6 +1,6 @@
 const express = require("express");
 const { cadastrarUsuario, obterPerfil, atualizarPerfil } = require('./controladores/usuarios');
-const { obterPostagens,postagensFoto } = require('./controladores/postagens');
+const {  novaPostagem,curtir} = require('./controladores/postagens');
 const verificaLogin = require('./filtros/verificaLogin'); 
 const login = require('./controladores/login');
 
@@ -14,7 +14,7 @@ rotas.use(verificaLogin);
 
 rotas.get('/perfil', obterPerfil);
 rotas.put('/perfil', atualizarPerfil);
-rotas.get('/postagens',obterPostagens);
- 
+rotas.post('/postagens', novaPostagem);
+rotas.post('/postagens/:postagemId/curtir',curtir);
 
 module.exports = rotas;

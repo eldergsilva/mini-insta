@@ -1,67 +1,69 @@
 const knex = require('../bd');
 
-const obterPostagens = async (req, res) => {
+const novaPostagem = async (req, res) => {
     const { id } = req.usuario;
+    const { texto, fotos } = req.body;
+    
+    if (fotos && fotos.length === 0) {
+        return res.status(400).json({ mensagem: 'É necessário enviar ao menos uma foto' });
+    }
 
     try {
-        
-        const postagens = await knex('postagem')
-            .join('usuarios', 'postagem.usuario_id', 'usuarios.id')
-            .select(
-                'postagem.id',
-                'postagem.texto',
-                'postagem.data',
-                'usuarios.username',
-                'usuarios.imagem as usuario_imagem',
-                'usuarios.verificado as e_perfil_oficial'
-            );
+        const postagem = await knex('postagem').insert({
+            usuario_id: id,
+            texto            
+        }).returning('*');
 
-        if (postagens.length === 0) {
-            return res.status(404).json({ mensagem: 'Não há postagens' });
+        if(!postagem) {
+            return res.status(400).json({ mensagem: 'Não foi possível concluir a postagem' });
         }
 
-        
-        const idsDasPostagens = postagens.map((postagem) => postagem.id);
-
-       
-        const fotos = await knex('postagem_foto')
-            .whereIn('postagem_id', idsDasPostagens)
-            .select('id', 'postagem_id', 'imagem');
-
+        for (const foto of fotos) {
+            foto.postagem_id = postagem[0].id;
+        }
          
-        const postagensFormatadas = postagens.map((postagem) => {
-            
-            
-            const fotosDaPostagem = fotos
-                .filter(foto => foto.postagem_id === postagem.id)
-                .map(foto => {
-                    return {
-                        id: foto.id,
-                        imagem: foto.imagem
-                    };
-                });
+        const fotosCadastradas = await knex('postagem_foto').insert(fotos).returning('*');
 
-            return {
-                id: postagem.id,
-                texto: postagem.texto,
-                data: postagem.data,
-                usuario: {
-                    username: postagem.username,
-                    imagem: postagem.usuario_imagem,
-                    e_perfil_oficial: postagem.e_perfil_oficial
-                },
-                fotos: fotosDaPostagem  
-            };
-        });
+        if(!fotosCadastradas){
+            await knex('postagem').where({ id: postagem[0].id }).del();
+            return res.status(400).json({ mensagem: 'Não foi possível cadastrar as fotos da postagem' });
+        }
+        return res.status(200).json({ mensagem: 'Postagem criada com sucesso' });
 
-        return res.status(200).json(postagensFormatadas);
-         
-    } catch (error) {
-        return res.status(500).json({ mensagem: error.message });
+    }catch (error) {
+        return res.status(500).json(error.message);
     }
-}
- 
+
+    
+};
+
+const curtir = async (req, res) => {    
+    const {id} = req.usuario;
+    const {postagemId} = req.params;
+
+    try {
+        const postagem = await knex('postagem').where({id: postagemId}).first();
+        if(!postagem){
+            return res.status(404).json({mensagem: 'Postagem não encontrada'});
+        }
+        
+        const JaCurtiu = await knex('postagem_curtidas').where({usuario_id: id, postagem_id: postagemId}).first();
+        if(JaCurtiu){
+            return res.status(400).json({mensagem: 'Você já curtiu essa postagem'});
+        }
+       const curtida = await knex('postagem_curtidas').insert({usuario_id: id, postagem_id: postagemId});
+
+       if( !curtida){
+        return res.status(400).json({mensagem: 'Não foi possível curtir a postagem'});
+       }
+       
+       return res.status(200).json({mensagem: 'Postagem curtida com sucesso'});
+    }catch (error) {
+        return res.status(500).json(error.message);
+    }    
+}    
+
 module.exports = {
-    obterPostagens
+    novaPostagem,
+    curtir
 }
- 
